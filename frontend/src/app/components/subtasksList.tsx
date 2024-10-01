@@ -27,7 +27,7 @@ const SubtasksList = () => {
       fetchTasks();
     }, [id]);
 
-    const deleteSubTask = async (id) => {
+    const deleteSubTask = async (id : number | undefined) => {
       try {
         const response = await api.delete('/subtasks/' + id);
         if (response.status === 200) {
@@ -38,7 +38,6 @@ const SubtasksList = () => {
         }
       } catch (error) {
         console.error("There was an error deleting the subtask:", error);
-        alert(error.response?.data?.message || "Failed to delete subtask");
       }
     };
   

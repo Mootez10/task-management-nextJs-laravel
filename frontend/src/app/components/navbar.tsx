@@ -1,3 +1,4 @@
+"use client"
 import Link from "next/link";
 import Image from "next/image";
 import "bootstrap/dist/css/bootstrap.min.css";
@@ -46,38 +47,7 @@ const Navbar = () => {
               ALL TASKS
             </Link>
           </li>
-          <li className="nav-item dropdown mx-3">
-            <Link
-              className="nav-link dropdown-toggle"
-              href="#"
-              id="navbarDropdownMenuLink"
-              role="button"
-              data-bs-toggle="dropdown"
-              aria-expanded="false"
-            >
-              TASKS STATUS
-            </Link>
-            <ul
-              className="dropdown-menu"
-              aria-labelledby="navbarDropdownMenuLink"
-            >
-              <li>
-                <Link className="dropdown-item" href="/home/status/done">
-                  Done
-                </Link>
-              </li>
-              <li>
-                <Link className="dropdown-item" href="/home/status/pending">
-                  Still Pending
-                </Link>
-              </li>
-              <li>
-                <Link className="dropdown-item" href="/home/status/canceled">
-                  Canceled
-                </Link>
-              </li>
-            </ul>
-          </li>
+          
           <li className="nav-item mx-3">
             <Link className="nav-link" href="/home/statistics">
               STATISTICS

@@ -1,10 +1,11 @@
 import axios, { AxiosInstance } from 'axios';
 
-interface Token {
-  token: string;
-}
 
-const token = localStorage.getItem('token');
+let token: string | null = null;
+if (typeof window !== 'undefined') {
+  // You are in the browser environment
+   token = localStorage.getItem('token');
+}
 
 const api: AxiosInstance = axios.create({
   baseURL: 'http://localhost:8000/api',

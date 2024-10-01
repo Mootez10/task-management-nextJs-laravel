@@ -102,7 +102,6 @@
             <p>If you have any questions or need assistance, feel free to <a href="mailto:support@yourapp.com">contact support</a>.</p>
 
             <br>
-            <a href="{{ url('/tasks/' . $task->id) }}" class="button">View Task Details</a>
         </div>
 
         <!-- Footer -->

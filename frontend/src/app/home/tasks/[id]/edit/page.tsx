@@ -22,7 +22,7 @@ const EditTaskPage =() => {
     fetchTask();
   }, [id]);
 
-  const formatDateForInput = (date) => {
+  const formatDateForInput = (date: Date) => {
     if (!date) return '';
     const d = new Date(date);
     return d.toISOString().split('T')[0];
@@ -45,7 +45,7 @@ const EditTaskPage =() => {
     }
   };
 
-  const handleChange = (event) => {
+  const handleChange = (event : React.ChangeEvent<HTMLInputElement> | React.ChangeEvent<HTMLSelectElement>) => {
     const { name, value } = event.target;
     setInputs((values) => ({ ...values, [name]: value }));
   };
@@ -73,7 +73,7 @@ const EditTaskPage =() => {
     }
   };
 
-  const handleSubmit = async (e) => {
+  const handleSubmit = async (e : React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     await uploadTask();
   };

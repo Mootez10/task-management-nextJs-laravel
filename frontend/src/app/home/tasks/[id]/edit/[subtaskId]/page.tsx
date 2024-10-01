@@ -1,5 +1,5 @@
 "use client";
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, SyntheticEvent } from "react";
 import Link from "next/link";
 import api from "@/app/axios";
 import { useParams, useRouter } from "next/navigation";
@@ -21,7 +21,7 @@ const  EditSubTaskPage =() =>{
     fetchTask();
   }, [subtaskId]);
 
-  const formatDateForInput = (date) => {
+  const formatDateForInput = (date : Date) => {
     if (!date) return '';
     const d = new Date(date);
     return d.toISOString().split('T')[0];
@@ -43,7 +43,7 @@ const  EditSubTaskPage =() =>{
     }
   };
 
-  const handleChange = (event) => {
+  const handleChange = (event: React.ChangeEvent<HTMLInputElement> | React.ChangeEvent<HTMLSelectElement>) => {
     const { name, value } = event.target;
     setInputs((values) => ({ ...values, [name]: value }));
     console.log(setInputs);
@@ -72,7 +72,7 @@ const  EditSubTaskPage =() =>{
     }
   };
 
-  const handleSubmit = async (e) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     await uploadSubTask();
   };

@@ -28,7 +28,7 @@ const TasksList = () => {
     fetchTasks();
   }, []);
 
-  const deleteTask = async (id) => {
+  const deleteTask = async (id : number | undefined) => {
     try {
       const response = await api.delete('/tasks/' + id);
       if (response.status === 200) {
@@ -39,7 +39,6 @@ const TasksList = () => {
       }
     } catch (error) {
       console.error("There was an error deleting the task:", error);
-      alert(error.response?.data?.message || "Failed to delete task");
     }
   };
 
