@@ -1,0 +1,13 @@
+
+
+  .navbar {
+    height: 90px; 
+    background-color: #f8f9fa;
+  }
+  
+  .navbar .dropdown-menu {
+    position: absolute;
+    z-index: 1000;
+    margin-top: 0; 
+  }
+  
