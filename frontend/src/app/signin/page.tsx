@@ -4,36 +4,35 @@ import { useRouter } from "next/navigation";
 import 'bootstrap/dist/css/bootstrap.min.css';
 import Link from "next/link";
 import "../globals.css";
-import { headers } from 'next/headers';
 import api from '../axios';
 
 
 const SignIn = () => {
-    const [email, setEmail] = useState('');
-    const [password, setPassword] = useState('');
-  
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+
   const router = useRouter();
 
   const submit = async (e: SyntheticEvent) => {
-    e.preventDefault();
+      e.preventDefault();
 
-    await api.post('/login', {email,password}, {
-      headers: {
-       'Content-Type': 'application/json'
+      try {
+          const response = await api.post('/login', { email, password }, {
+              headers: {
+                  'Content-Type': 'application/json'
+              }
+          });
+
+          console.log(response.data);
+          
+          const token = response.data.token;
+          localStorage.setItem('token', token);
+
+          router.push('/home/tasks');
+      } catch (err) {
+          console.log(err);
       }
-    })
-    .then((response)=>{
-        console.log(response)
-        const token = response.data.token;
-        localStorage.setItem('token', token);
-        router.push('/home/tasks');
-    })
-    .catch((err) => {
-      console.log(err)
-    })
-
-    
-  }
+  };
   
   return (
     <>

@@ -1,7 +1,6 @@
 "use client";
 
 import { useEffect, useState } from 'react';
-import axios from 'axios';
 import { Task } from '@/app/models/task';
 import { useSearchParams } from 'next/navigation';
 import api from '@/app/axios';

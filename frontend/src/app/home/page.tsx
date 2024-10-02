@@ -1,9 +1,8 @@
 "use client";
 
 import "bootstrap/dist/css/bootstrap.min.css";
-import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import withAuth from './../withAuth';
 
 

@@ -6,7 +6,7 @@ import { useParams, useRouter } from "next/navigation";
 import SubtasksList from "@/app/components/subtasksList";
 import withAuth from "@/app/withAuth";
 
-const EditTaskPage =() => {
+const EditTaskPage = () => {
   const { id } = useParams();
   const router = useRouter(); 
   const [message, setMessage] = useState('');
@@ -17,35 +17,35 @@ const EditTaskPage =() => {
     due_date: ''
   });
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState('');
 
   useEffect(() => {
+    const fetchTask = async () => {
+      try {
+        const result = await api.get("/tasks/" + id);
+        console.log("API Response:", result.data);
+        if (result?.data?.task) {
+          const task = result.data.task;
+          task.due_date = formatDateForInput(task.due_date);
+          setInputs(task);
+        }
+      } catch (err) {
+        setError("Failed to fetch task.");
+        console.log("Something went wrong:", err);
+      } finally {
+        setLoading(false);
+      }
+    };
+
     fetchTask();
   }, [id]);
 
   const formatDateForInput = (date: Date) => {
     if (!date) return '';
-    const d = new Date(date);
-    return d.toISOString().split('T')[0];
+    return new Date(date).toISOString().split('T')[0];
   };
 
-  const fetchTask = async () => {
-    try {
-      const result = await api.get("/tasks/" + id);
-      console.log("API Response:", result.data);
-      if (result?.data?.task) {
-        const task = result.data.task;
-        task.due_date = formatDateForInput(task.due_date);
-        setInputs(task);
-        console.log('inputs', inputs)
-      }
-      setLoading(false);
-    } catch (err) {
-      console.log("Something went wrong:", err);
-      setLoading(false);
-    }
-  };
-
-  const handleChange = (event : React.ChangeEvent<HTMLInputElement> | React.ChangeEvent<HTMLSelectElement>) => {
+  const handleChange = (event: React.ChangeEvent<HTMLInputElement> | React.ChangeEvent<HTMLSelectElement>) => {
     const { name, value } = event.target;
     setInputs((values) => ({ ...values, [name]: value }));
   };
@@ -53,10 +53,10 @@ const EditTaskPage =() => {
   const uploadTask = async () => {
     const formData = new FormData();
     formData.append('_method', 'PUT');
-    if (inputs.title) formData.append('title', inputs.title);
-    if (inputs.description) formData.append('description', inputs.description);
-    if (inputs.status) formData.append('status', inputs.status);
-    if (inputs.due_date) formData.append('due_date', inputs.due_date);
+    formData.append('title', inputs.title);
+    formData.append('description', inputs.description);
+    formData.append('status', inputs.status);
+    formData.append('due_date', inputs.due_date);
 
     try {
       const response = await api.post("/tasks/" + id, formData, {
@@ -64,16 +64,16 @@ const EditTaskPage =() => {
       });
       setMessage(response.data.message);
       console.log(response);
-
       setTimeout(() => {
         router.push('/home/tasks');
       }, 1000);
     } catch (error) {
+      setError("Failed to update task.");
       console.log("Something went wrong:", error);
     }
   };
 
-  const handleSubmit = async (e : React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     await uploadTask();
   };
@@ -96,6 +96,7 @@ const EditTaskPage =() => {
                 <p>Loading task data...</p>
               ) : (
                 <>
+                  {error && <p className="text-danger"><b>{error}</b></p>}
                   <p className="text-success"><b>{message}</b></p>
                   <form onSubmit={handleSubmit}>
                     <div className="mb-3">
@@ -162,9 +163,9 @@ const EditTaskPage =() => {
           </div>
         </div>
       </div>
-      <SubtasksList/>
+      <SubtasksList />
     </div>
   );
 }
 
-export default withAuth(EditTaskPage)
+export default withAuth(EditTaskPage);
