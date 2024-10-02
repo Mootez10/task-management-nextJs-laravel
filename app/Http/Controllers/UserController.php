@@ -8,17 +8,6 @@ use Illuminate\Support\Facades\Auth;
 
 class UserController extends Controller
 {
-    // public function getAuthenticatedUser(Request $request)
-    // {
-        
-    //     $user = $request->user();
-
-    //     return response()->json([
-    //         'success' => true,
-    //         'message' => 'Authenticated user retrieved successfully',
-    //         'data' => $user
-    //     ]);
-    // }
 
     public function updateUser(Request $request, $id)
     {

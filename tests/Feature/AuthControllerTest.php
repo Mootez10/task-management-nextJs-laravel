@@ -1,59 +1,107 @@
 <?php
 
 use App\Models\User;
+use Laravel\Sanctum\Sanctum;
 use Illuminate\Support\Facades\Hash;
-use Illuminate\Foundation\Testing\RefreshDatabase;
 
-uses(RefreshDatabase::class);
 
-// Test for user registration
-it('can register a user', function () {
-    $response = postJson('/register', [
-        'name' => 'John Doe',
-        'email' => 'johndoe@example.com',
-        'password' => 'password',
-        'password_confirmation' => 'password',
+it('can register a new user', function () {
+    $data = [
+        'name' => 'Aouinti Mootez',
+        'email' => 'mootez@gmail.com',
+        'password' => '123456',
+        'password_confirmation' => '123456',
+    ];
+
+    $response = $this->postJson('/register', $data);
+
+    $response->assertStatus(200);
+    $this->assertDatabaseHas('users', [
+        'email' => 'mootez@gmail.com',
+        'name' => 'Aouinti Mootez',
     ]);
 
-    $response->assertStatus(200); // or 302 for redirect
-    $this->assertDatabaseHas('users', ['email' => 'johndoe@example.com']);
+    $response->assertJson([
+        'user' => [
+            'email' => 'mootez@gmail.com',
+            'name' => 'Aouinti Mootez',
+        ]
+    ]);
 });
 
-// Test for user login
-it('can login a user', function () {
-    $user = User::factory()->create([
-        'email' => 'alias@gmail.com',
+it('can log in a user with correct credentials', function () {
+    $user = User::create([
+        'name' => 'Aouinti Mootez',
+        'email' => 'mootez@gmail.com',
         'password' => Hash::make('123456'),
     ]);
 
-    $response = postJson('/login', [
-        'user' => $user,
-        'token' => 'token',
+
+    $response = $this->postJson('/login', [
+        'email' => 'mootez@gmail.com',
+        'password' => '123456',
     ]);
 
-    $response->assertStatus(200); // or 302 if redirected
-    $this->assertAuthenticated();
+    $response->assertStatus(200);
+    $response->assertJsonStructure([
+        'user' => [
+            'name',
+            'email',
+        ],
+        'token',
+    ]);
+
+    $this->assertNotNull($response['token']);
 });
 
-// Test for failed login
-it('cannot login with invalid credentials', function () {
-    $response = postJson('/login', [
-        'email' => 'invalid@example.com',
+it('returns an error with incorrect credentials', function () {
+    $user = User::create([
+        'name' => 'Aouinti Mootez',
+        'email' => 'mootez@gmail.com',
+        'password' => Hash::make('535dfdgd'),
+    ]);
+
+    $response = $this->postJson('/login', [
+        'email' => 'mootez@gmail.com',
         'password' => 'wrongpassword',
     ]);
 
-    $response->assertStatus(200); // Unprocessable Entity for failed validation
-    $this->assertGuest();
+    $response->assertStatus(200);
+    $response->assertJson([
+        'message' => 'the provided credentials are incorrect',
+    ]);
 });
 
-// Test for user logout
-it('can logout a user', function () {
-    $user = User::factory()->create();
+it('returns an error when email does not exist', function () {
+    $response = $this->postJson('/login', [
+        'email' => 'aaa@aaa.com',
+        'password' => '123456',
+    ]);
 
-    $this->actingAs($user);
-
-    $response = postJson('/logout');
-
-    $response->assertStatus(200); // or 302 for redirect
-    $this->assertGuest();
+    $response->assertStatus(200);
+    $response->assertJson([
+        'message' => 'the provided credentials are incorrect',
+    ]);
 });
+
+it('logs out the user and deletes tokens', function () {
+    $user = User::create([
+        'name' => 'Aouinti Mootez',
+        'email' => 'mootez@gmail.com',
+        'password' => bcrypt('123456'),
+    ]);
+
+    Sanctum::actingAs($user);
+
+    $response = $this->postJson('/logout');
+
+    $response->assertStatus(200);
+    $response->assertJson([
+        'message' => 'You are logged out',
+    ]);
+
+    $this->assertCount(0, $user->tokens);
+});
+
+
+

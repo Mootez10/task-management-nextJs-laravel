@@ -11,17 +11,14 @@ Route::get('/user', function (Request $request) {
     return $request->user();
 })->middleware('auth:sanctum');
 
-Route::middleware('auth:api')->get('/authenticated-user', [UserController::class, 'getAuthenticatedUser']);
 Route::middleware('auth:api')->put('/user/{id}', [UserController::class, 'updateUser']);
 Route::middleware('auth:api')->delete('/user/{id}', [UserController::class, 'deleteUser']);
-
 
 Route::middleware('auth:sanctum')->get('/tasks', [TaskController::class, 'index']) ;                                                               // hedhe bech ytaalali f list lkooool /api/tasks
 Route::middleware('auth:sanctum')->post('/tasks', [TaskController::class, 'store']);
 Route::middleware('auth:sanctum')->put('/tasks/{id}', [TaskController::class, 'update']);
 Route::middleware('auth:sanctum')->delete('/tasks/{id}', [TaskController::class, 'destroy']);
-Route::middleware('auth:api')->get('/tasks/{id}', [TaskController::class, 'show']);
-
+Route::middleware('auth:sanctum')->get('/tasks/{id}', [TaskController::class, 'show']);
 
 
 Route::middleware('auth:api')->get('/subtasks/{task_id}', [SubTaskController::class, 'getSubtasksByTaskId']);
@@ -35,11 +32,13 @@ Route::middleware('auth:sanctum')->get('/statistics', action: [TaskController::c
 
 
 
+
 Route::post('/register', [AuthController::class, 'register']);
 Route::post('/login', [AuthController::class, 'login']);
-Route::post('/logout', [AuthController::class, 'logout'])->middleware('auth:sanctum');                                                             //ken besh taamel request aal logout ykolik Unauthentificated kenek mekech mlogini asln 
+Route::post('/logout', [AuthController::class, 'logout'])->middleware('auth:sanctum'); 
 
 
-Route::put('/user{id}', [UserController::class, 'updateUser']);
-Route::delete('/user{id}', [UserController::class, 'deleteUser']);
+// i want to optimize them but when i put them in group , i may have a problem with reading the apis in front , so i kept them like this 
+
+
 

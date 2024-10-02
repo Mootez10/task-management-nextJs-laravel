@@ -97,7 +97,7 @@
             <p><strong>Due Date:</strong> {{ $subtask->due_date ?? 'No due date set' }}</p>
 
             <br>
-            <p>If you have any questions or need assistance, feel free to <a href="mailto:support@yourapp.com">contact support</a>.</p>
+            <a href="{{ url('/subtasks/' . $subtask->id) }}" class="button">View SubTask Details</a>
 
             <br>
         </div>
